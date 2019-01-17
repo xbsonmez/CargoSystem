@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>User Main Page</title>
+<style>
+ #div1{
+    position:absolute;
+   top:50px	;
+   right:450px;
+}
+
+#rcorners1 {
+    border-radius: 0px;
+    background: #00529B;
+	width: 240px;
+    height: 165px;
+	border-bottom-left-radius: 25px;
+	 position:absolute;
+   top:0	;
+   right:0;
+
+}
+p {
+        color: #FEF200;
+}
+h4{color:#FEF200;}
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+
+
+</style>
+</head>
+<body>
+
+
+<header>
+
+<img src="http://www.apartyurt.com/wp-content/uploads/2016/02/I%C5%9EIK-%C3%9CN%C4%B0VERS%C4%B0TES%C4%B0-logo.jpg" height="150px" width="150px"   >
+<center><div id="div1"><h1>CARGO CENTER MAIN PAGE<h1></div></center>
+
+<div class="card" id="rcorners1">
+
+  <center><img src="http://rte25.upsdc.gov.in/images/Student.jpg" height="45px" width="45px"><center>
+  <h4>{{ request.user.username }}</h4>
+  <p class="title" >SchoolID</p>
+      {% if user.is_authenticated %}
+      {{ request.user }} | <a href="#" onClick="document.getElementById('logoutform').submit()">
+      <button type="button">Logout</button></a>
+        <form id="logoutform" method="POST" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <input type="hidden">
+        </form>
+      {% endif %}
+
+
+  <div style="margin: 24px 0;">
+ </div>
+
+
+
+</header>
+
+<br></br>
+<br></br>
+
+    <!--{% if request.user.user_type == 'customer' %}-->
+        <!--customer-->
+    <!--{% elif request.user.user_type == 'transporter' %}-->
+        <!--transporter-->
+    <!--{% else %}-->
+        <!--manager-->
+    <!--{% endif %}-->
+<table>
+    <tr>
+	<th>Cargo Number</th>
+    <th>From</th>
+    <th>Currently Who Carries</th>
+    <th>TO</th>
+    <th>The Date of Reaching The Cargo Center</th>
+	<th>Delivery Date to Owner</th>
+    </tr>
+
+    {% for cargo in cargos %}
+
+  <tr><a href="cargoPage.html">
+    <td><a href="{% url 'cargo_detail' cargo.id %}">{{cargo.id}}</a> </td>
+    <td><a href="{% url 'cargo_detail' cargo.id %}">{{cargo.from_who}}</a></td>
+       {% if cargo.who_has_now %}
+    <td><a href="{% url 'cargo_detail' cargo.id %}">{{cargo.who_has_now}}</a></td>
+      {% else %}
+       <td>Not taken yet.</td>
+         {% endif %}
+    <td>{{cargo.to_who}}</td>
+    <td>{{cargo.created_cargo_date}}</td>
+       {% if cargo.taken_cargo_date %}
+    <td>{{cargo.taken_cargo_date}}</td>
+       {% else %}
+       <td>Not taken yet.</td>
+         {% endif %}
+  </tr>
+
+  <tr>
+{% empty %}
+
+      boşş
+{% endfor %}
+
+</table>
+
+
+
+</body>
+</html>

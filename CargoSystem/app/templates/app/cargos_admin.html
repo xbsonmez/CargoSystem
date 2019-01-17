@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Main Page</title>
+<style>
+ #div1{
+    position:absolute;
+   top:50px	;
+   right:450px;
+}
+
+#rcorners1 {
+    border-radius: 0px;
+    background: #00529B;
+	width: 240px;
+    height: 165px;
+	border-bottom-left-radius: 25px;
+	 position:absolute;
+   top:0	;
+   right:0;
+
+}
+p {
+        color: #FEF200;
+}
+h4{color:#FEF200;}
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+.button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+button:hover {
+    opacity: 0.8;
+}
+.cancelbtn {
+    width: auto;
+    padding: 10px 18px;
+    background-color:#1c99f6;
+}
+.container {
+    padding: 16px;
+}
+span.psw {
+    float: right;
+    padding-top: 16px;
+}
+
+.modal {
+    display: none;
+    position: fixed; /
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    padding-top: 60px;
+}
+
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto 15% auto;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+
+.close {
+    position: absolute;
+    right: 25px;
+    top: 0;
+    color: #000;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: red;
+    cursor: pointer;
+}
+
+
+.animate {
+    -webkit-animation: animatezoom 0.6s;
+    animation: animatezoom 0.6s
+}
+
+@-webkit-keyframes animatezoom {
+    from {-webkit-transform: scale(0)}
+    to {-webkit-transform: scale(1)}
+}
+
+@keyframes animatezoom {
+    from {transform: scale(0)}
+    to {transform: scale(1)}
+}
+
+
+@media screen and (max-width: 300px) {
+    span.psw {
+       display: block;
+       float: none;
+    }
+    .cancelbtn {
+       width: 100%;
+    }
+
+
+
+</style>
+</head>
+<body>
+
+  {% if request.user.user_type = "manager" %}
+<header>
+
+<img src="http://www.apartyurt.com/wp-content/uploads/2016/02/I%C5%9EIK-%C3%9CN%C4%B0VERS%C4%B0TES%C4%B0-logo.jpg" height="150px" width="150px"   >
+    <center><div id="div1"><h1>CARGO CENTER </h1></div></center>
+
+<div class="card" id="rcorners1">
+   <center><img src="http://rte25.upsdc.gov.in/images/Student.jpg" height="45px" width="45px"><center>
+  <h4>{{ request.user.username }}</h4>
+  <p class="title" >SchoolID</p>
+      {% if user.is_authenticated %}
+      {{ request.user }} | <a href="#" onClick="document.getElementById('logoutform').submit()">
+      <button type="button">Logout</button></a>
+        <form id="logoutform" method="POST" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <input type="hidden">
+        </form>
+      {% endif %}
+  <div style="margin: 24px 0;"></div>
+</div>
+</header>
+
+<br></br>
+<br></br>
+
+
+
+<table>
+	<tr>
+	<th>Cargo Number</th>
+    <th>From</th>
+    <th>Reciever</th>
+	<th>Created Date </th>
+    <th>Taken Date </th>
+  </tr>
+
+{% for cargo in cargos %}
+	 <tr>
+         <a href="cargoPage.html"><td>{{cargo.id}}</td></a>
+    <td>{{cargo.from_who}}</td>
+    <td>{{cargo.to_who}}</td>
+    <td>{{cargo.created_cargo_date}}</td>
+         {% if cargo.taken_cargo_date %}
+            <td>{{cargo.taken_cargo_date}}</td>
+         {% else %}
+            <td>Not taken yet.</td>
+         {% endif %}
+	</tr>
+{% empty %}
+{% endfor %}
+
+</table>
+	<button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Add New Cargo</button>
+	<div id="id01" class="modal">
+    <form class="modal-content animate" action="{% url 'cargo_center_list' %}" method="post">
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="imgcontainer">
+            <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+            <img src="http://rte25.upsdc.gov.in/images/Student.jpg" height="50px" width="50px"  >
+          </div>
+
+                <div class="fieldWrapper">
+
+                {{ field.errors }}
+                {{ field.label_tag }} {{ field }}
+                {% if field.help_text %}
+                <p class="help">{{ field.help_text|safe }}</p>
+                {% endif %}
+                </div>
+
+        {% endfor %}
+        <input type="submit" value="ADD ">
+    </form>
+<!--  <form class="modal-content animate" action="/add_cargo/" method="post">
+    <div class="imgcontainer">
+      <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+      <img src="pp.png" height="50px" width="50px"  >
+    </div>
+
+    <div class="container">
+      <label for="source"><b>FROM</b></label>
+      <input id="source" type="text" placeholder="From" name="from" value="{{fromwho}}" required>
+
+      <label for="destination"><b>RECEIVER</b></label>
+      <input id="destination" type="text" placeholder="Receiver" name="receiver" value="{{reciverwho}}" required>
+
+      <button type="submit" value="OK">ADD</button>
+
+      <label>
+
+      </label>
+    </div>
+	  </form>-->
+	</div>
+<script>
+// Get the modal
+var modal = document.getElementById('id01');
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+</script>
+  {% endif %}
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Cargo </title>
+<style>
+ #div1{
+    position:absolute;
+   top:50px	;
+   right:450px;
+}
+
+#rcorners1 {
+    border-radius: 0px;
+    background: #00529B;
+	width: 240px;
+    height: 165px;
+	border-bottom-left-radius: 25px;
+	 position:absolute;
+   top:0	;
+   right:0;
+
+}
+p {
+        color: #FEF200;
+}
+h4{color:#FEF200;}
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+.button {
+    background-color: #008CBA;;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.button2 {background-color: #f44336;}
+
+</style>
+</head>
+<body>
+
+
+<header>
+
+<img src="http://img.habervitrini.com/Haber/_AnaManset/e1f94588-b140-4b21-9f84-af8c573fc919.jpg" height="150px" width="300px"   >
+<center><div id="div1"><h1>APPLY CARGO <h1></div></center>
+
+<div class="card" id="rcorners1">
+  <center><img src="http://rte25.upsdc.gov.in/images/Student.jpg" height="45px" width="45px"><center>
+  <h4> {{ request.user }}</h4>
+  <p class="title" >SchoolID</p>
+    {% if user.is_authenticated %}
+      {{ request.user }} | <a href="#" onClick="document.getElementById('logoutform').submit()">
+      <button type="button">Logout</button></a>
+        <form id="logoutform" method="POST" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <input type="hidden">
+        </form>
+      {% endif %}
+  <div style="margin: 24px 0;">
+ </div>
+
+
+
+</header>
+
+<br></br>
+<br></br>
+
+<table>
+	<tr>
+	<th>Cargo Number</th>
+    <th>From</th>
+    <th>Reciever</th>
+	<th>Date </th>
+  </tr>
+	 <tr>
+    <td>{{cargo.id}}</td>
+    <td>{{cargo.from_who}}</td>
+    <td>{{cargo.to_who}}</td>
+    <td>{{cargo.created_cargo_date}}</td></a>
+	</tr>
+
+</table>
+       {% if user.is_authenticated %}
+
+    <a href="#" onClick="document.getElementById('TakeCargo').submit()">
+    <button class="button" >Apply</button></a>
+    <form id="TakeCargo" method="POST" action="{% url 'cargo_detail' cargo.id %}">
+       {% csrf_token %}
+        <input type="hidden">
+        </form>
+        {% endif %}
+
+
+
+
+</body>
+</html>
